@@ -20,13 +20,36 @@ class ScrapedItem
   end
 
   def builder_notes
-    company_info = page.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
+    company_info = page_to_parse.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
 
-    notes = String.new
+    notes_string = String.new
+    notes = Hash.new
+
+    #Zayne notes
+    # `my_hash = Hash.new`
+    # `#start iterator`
+    # `item = a.text`
+    # `if item.include?('contact:')`
+    # `my_hash[:contact] = item.gsub('contact:', '')`
+    # `end`
+    # `#end iterator`
 
     company_info.css('div.info-list-text').each do |a|
-      notes << a.text.squish
-      notes << ", "
+      if a.text.include?('Contact:')
+        notes[:contact_name] = a.text.gsub('Contact: ','')
+      end
+
+      if a.text.include?('Location:')
+        notes[:location] = a.text.gsub('Location: ','')
+      end
+
+      if a.text.include?('Typical Job Costs:')
+        notes[:typical] = a.text.gsub('Typical Job Costs: ','')
+      end
+
+
+      notes_string << a.text.squish
+      notes_string << ", "
     end
     return notes
   end
@@ -42,15 +65,14 @@ class ScrapedItem
 			contact_data = {
         company: @company,
         phone: contact_info.css('span.pro-contact-text').css('a.click-to-call-link').first.attributes['phone'].value.to_s,
-
         site: contact_info.css('a.proWebsiteLink').first.attributes['href'].value,
         url: @url,
         type: company_info.css("span[itemprop = 'title']").children[1].text,
-        notes: builder_notes
-#       contact_name:
+#       notes: builder_notes,
+        contact_name: builder_notes[:contact_name],
 #       email:
-#       location:
-#       typical:
+        location: builder_notes[:location],
+        typical: builder_notes[:typical]
 
 			}
   		contact_array << contact_data
