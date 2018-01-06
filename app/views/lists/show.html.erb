@@ -5,5 +5,15 @@
   <%= @list.source %>
 </p>
 
+
+<% @list.attributes.each do |attr_name, attr_value| %>
+  <% if attr_value.to_f.eql?(attr_value) # trying to get differnt formats for numbers and text%>
+    <p><strong><%= attr_name.titleize %>:</strong> <%= number_with_delimiter(attr_value.to_f.round(2), :delimiter => ',') %></p>
+  <% else %>
+    <p><strong><%= attr_name.titleize %>:</strong> <%= attr_value %></p>
+  <% end %>
+<% end %>
+
 <%= link_to 'Edit', edit_list_path(@list) %> |
+<%= link_to 'Builders', builders_path %> |
 <%= link_to 'Back', lists_path %>

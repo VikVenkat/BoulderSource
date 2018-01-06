@@ -2,26 +2,33 @@
 
 <h1>Lists</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Source</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @lists.each do |list| %>
-      <tr>
-        <td><%= list.source %></td>
-        <td><%= link_to 'Show', list %></td>
-        <td><%= link_to 'Edit', edit_list_path(list) %></td>
-        <td><%= link_to 'Destroy', list, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+<table>
+  <% list= @lists.first %>
+    <% list.attributes.each do |attr_name, attr_value| %>
+    <th> <strong><%= attr_name.titleize %></strong></th>
     <% end %>
-  </tbody>
+
+
+  <% for list in @lists %>
+    <tr>
+      <% list.attributes.each do |attr_name, attr_value| %>
+      <% if attr_value.to_f.eql?(attr_value) # trying to get differnt formats for numbers and text%>
+        <td><%= number_with_delimiter(attr_value.to_f.round(2), :delimiter => ',') %></td>
+      <% else %>
+        <td><%= attr_value.to_s[0,40] %></td>
+      <% end %>
+
+      <% end %>
+
+      <td><%= link_to "Show", list %></td>
+      <td><%= link_to "Edit", edit_list_path(list) %></td>
+      <td><%= link_to "Destroy", list, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
 </table>
 
 <br>
 
+<%= link_to 'Builders', builders_path %> |
 <%= link_to 'New List', new_list_path %>

@@ -2,22 +2,39 @@
 
 <h1>Builders</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @builders.each do |builder| %>
-      <tr>
-        <td><%= link_to 'Show', builder %></td>
-        <td><%= link_to 'Edit', edit_builder_path(builder) %></td>
-        <td><%= link_to 'Destroy', builder, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+<table>
+  <% builder= @builders.first %>
+    <% builder.attributes.each do |attr_name, attr_value| %>
+      <% if attr_name.include?('ed_at') %>
+        <% next %>
+      <% else %>
+      <th> <strong><%= attr_name.titleize %></strong></th>
+      <% end %>
     <% end %>
-  </tbody>
+
+
+  <% for builder in @builders %>
+    <tr>
+      <% builder.attributes.each do |attr_name, attr_value| %>
+        <% if attr_name.include?('ed_at') %>
+          <% next %>
+        <% elsif attr_value.to_s.include?('houzz.com') %>
+          <td><a href= <%= attr_value %>> <%= attr_value.to_s.gsub('https://www.houzz.com/pro','') %></a></td>
+        <% else %>
+          <% if attr_value.to_f.eql?(attr_value) # trying to get differnt formats for numbers and text%>
+            <td><%= number_with_delimiter(attr_value.to_f.round(2), :delimiter => ',') %></td>
+          <% else %>
+            <td><%= attr_value.to_s[0,40] %></td>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <td><%= link_to "Show", builder %></td>
+      <td><%= link_to "Edit", edit_builder_path(builder) %></td>
+      <td><%= link_to "Destroy", builder, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
 </table>
 
 <br>

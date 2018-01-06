@@ -5,24 +5,29 @@ class ScrapedList
   require 'pry'
   require 'json'
 
+#  def initialize(list)
+#    @list = list
+#  end
+
+  def parsed_page(input)
+    usaUrl = "https://www.houzz.com/professionals/home-builders/c/United-States/p/#{input}"
+    unparsed_page = HTTParty.get(usaUrl)
+    parsed_page = Nokogiri::HTML(unparsed_page)
+  end
 
 
-  def get_basic_list
-  	usaUrl = "https://www.houzz.com/professionals/home-builders/c/United-States"
-  	unparsed_page = HTTParty.get(usaUrl)
-  	parsed_page = Nokogiri::HTML(unparsed_page)
+  def get_basic_list(max_pages)
+
   	contact_url_list = Array.new
 
-  	big_max = parsed_page.css('h1.main-title').children.first.text.gsub(",","").to_i
+  	big_max = parsed_page(0).css('h1.main-title').children.first.text.gsub(",","").to_i
 
-  	max = 3
+  	max = max_pages
   	start = 0
   	input = 0
-  	while start < max do
-  		usaUrl = "https://www.houzz.com/professionals/home-builders/c/United-States/p/#{input}"
-  		unparsed_page = HTTParty.get(usaUrl)
-  		parsed_page = Nokogiri::HTML(unparsed_page)
-  		page = parsed_page
+  	while start <= max do
+
+  		page = parsed_page(input)
   		contact = page.css('div.name-info')
   		contact.each do |c|
   			## Here put the URLs into an Array
@@ -38,4 +43,5 @@ class ScrapedList
   	end #while
     return contact_url_list
   end
+
 end
