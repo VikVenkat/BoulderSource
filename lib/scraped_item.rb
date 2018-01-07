@@ -49,6 +49,10 @@ class ScrapedItem
         notes[:typical] = a.text.gsub('Typical Job Costs: ','')
       end
 
+      if a.text.include?('License Number:')
+        notes[:license] = a.text.gsub('License Number: ','')
+      end
+
       if company_info.css("span[itemprop = 'title']").children[1].text.present?
         notes[a] = company_info.css("span[itemprop = 'title']").children[1].text
       else
@@ -65,10 +69,10 @@ class ScrapedItem
     notes_string = String.new
     notes = Hash.new
 
-    if contact_info.css('span.pro-contact-text').css('a.click-to-call-link').first.attributes['phone'].value.to_s.present?
-      notes[:phone] = contact_info.css('span.pro-contact-text').css('a.click-to-call-link').first.attributes['phone'].value.to_s
-    else
+    if contact_info.css('span.pro-contact-text').css('a.click-to-call-link').first.nil?
       notes[:phone] = "Missing"
+    else
+      notes[:phone] = contact_info.css('span.pro-contact-text').css('a.click-to-call-link').first.attributes['phone'].value.to_s
     end
 
     if contact_info.css('a.proWebsiteLink').first.nil?
@@ -105,7 +109,8 @@ class ScrapedItem
         builder_type: company_notes[:builder_type],
         contact_name: company_notes[:contact_name],
         location: company_notes[:location],
-        typical: company_notes[:typical]
+        typical: company_notes[:typical],
+        license: company_notes[:license]
 #       notes: company_notes,
 #       email:
 
@@ -127,6 +132,7 @@ class ScrapedItem
       a[:contact_name] ||= b.at(0)[:contact_name]
       a[:location] ||= b.at(0)[:location]
       a[:typical] ||= b.at(0)[:typical]
+      a[:license] ||= b.at(0)[:license]
       a.save
       return a
 

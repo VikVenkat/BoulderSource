@@ -4,7 +4,7 @@ class List < ApplicationRecord
 
   after_create :set_builder_info
     def builder_list
-      a = ScrapedList.new.get_basic_list(0)
+      a = ScrapedList.new.get_basic_list(10)
     end
 
     def updated_list #this does not work
@@ -22,7 +22,7 @@ class List < ApplicationRecord
       a.each do |b|
         x = ScrapedItem.new(b).create_builder
       end
-
+      puts "Builder info set"
     end
 
 end
