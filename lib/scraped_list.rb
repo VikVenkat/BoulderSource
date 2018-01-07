@@ -42,7 +42,7 @@ class ScrapedList
 				}
 				contact_url_list << contact_data
   		end
-      puts "Scraped List for #{contact_url_list.size}"
+      puts "Scraped List for #{contact_url_list.size} peeps"
   		input_record += 15
       start += 1
   	end #while

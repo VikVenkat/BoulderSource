@@ -11,7 +11,8 @@ class ScrapedItem
     @url = @builder[:url]
     @company = @builder[:company]
     @counter = 0
-    puts @url
+    # puts "- - - - - - - - - - - - - "
+    print "Start: #{@company} @ #{@url}"
 
     #exURL = "https://www.houzz.com/pro/morningstarbuilders/morning-star-builders-ltd"
   end
@@ -21,8 +22,11 @@ class ScrapedItem
     unparsed_page = HTTParty.get(exURL)
     page = Nokogiri::HTML(unparsed_page)
     @counter += 1
-    print @counter if @counter % 5 == 0
-    print "..."
+      # if @counter % 5 == 0
+      #   print @counter
+      # else
+      #   print "."
+      # end
     return page
   end
 
@@ -151,6 +155,7 @@ class ScrapedItem
     a[:typical] ||= b.at(0)[:typical]
     a[:license] ||= b.at(0)[:license]
     a.save
+    puts " ==> Saved: #{a[:company].to_s[0,10]}..."
     return a
   end
 end
