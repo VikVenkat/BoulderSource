@@ -13,7 +13,7 @@ class ScrapedList
     usaUrl = "https://www.houzz.com/professionals/home-builders/p/#{input}"
     unparsed_page = HTTParty.get(usaUrl)
     parsed_page = Nokogiri::HTML(unparsed_page)
-    print "Loaded records page #{input} //"
+    print "Loaded records page #{input} // "
     return parsed_page
   end
 

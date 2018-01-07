@@ -12,7 +12,7 @@ class ScrapedItem
     @company = @builder[:company]
     @counter = 0
     # puts "- - - - - - - - - - - - - "
-    print "Start: #{@company} @ #{@url}"
+    print "Started: #{@company.to_s[0,15]}... @ #{@url}"
 
     #exURL = "https://www.houzz.com/pro/morningstarbuilders/morning-star-builders-ltd"
   end

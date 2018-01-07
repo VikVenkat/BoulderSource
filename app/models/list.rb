@@ -4,17 +4,17 @@ class List < ApplicationRecord
 
   after_create :set_builder_info
     def builder_list
-      a = ScrapedList.new.get_basic_list(1095,50) #Confirm if this finished, 1860 start
+      a = ScrapedList.new.get_basic_list(1860,75) #Confirm if this finished, 3000 start
     end
 
-    def updated_list #this does not work
-      @list = builder_list
-
-      self.update_attributes(:source => "Houzz + #{@list[:id].to_s}")
-      self.update_attributes(:length => @list.length.to_s)
-      self.update_attributes(:content => @list.to_s)
-
-    end
+    # def updated_list #this does not work
+    #   @list = builder_list
+    #
+    #   self.update_attributes(:source => "Houzz + #{@list[:id].to_s}")
+    #   self.update_attributes(:length => @list.length.to_s)
+    #   self.update_attributes(:content => @list.to_s)
+    #
+    # end
 
     def set_builder_info
       a = builder_list
