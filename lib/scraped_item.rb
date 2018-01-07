@@ -22,11 +22,6 @@ class ScrapedItem
     unparsed_page = HTTParty.get(exURL)
     page = Nokogiri::HTML(unparsed_page)
     @counter += 1
-      # if @counter % 5 == 0
-      #   print @counter
-      # else
-      #   print "."
-      # end
     return page
   end
 

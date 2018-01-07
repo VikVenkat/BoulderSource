@@ -4,7 +4,7 @@ class List < ApplicationRecord
 
   after_create :set_builder_info
     def builder_list
-      a = ScrapedList.new.get_basic_list(330, 50) #Confirm if this finished, 1080 start
+      a = ScrapedList.new.get_basic_list(1095,50) #Confirm if this finished, 1860 start
     end
 
     def updated_list #this does not work
@@ -18,16 +18,19 @@ class List < ApplicationRecord
 
     def set_builder_info
       a = builder_list
+      @fail_count = 0
 
       a.each do |b|
         begin
           x = ScrapedItem.new(b).create_builder
         rescue HTTParty::UnsupportedURIScheme => e
           puts " // #{e.message} ==> Failed: #{b[:company].to_s[0,15]}..."
+          @fail_count += 1
         end
           #binding.pry
       end
       puts " "
+      puts "Failed to save #{@fail_count} records"
       puts "==============================================="
       puts "Success! Builder info set for #{a.size} records"
       puts "==============================================="
