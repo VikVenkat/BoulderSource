@@ -4,7 +4,7 @@ class List < ApplicationRecord
 
   after_create :set_builder_info
     def builder_list
-      a = ScrapedList.new.get_basic_list(330, 10)
+      a = ScrapedList.new.get_basic_list(330, 100) #Confirm if this finished, 19 ppl per page
     end
 
     def updated_list #this does not work
