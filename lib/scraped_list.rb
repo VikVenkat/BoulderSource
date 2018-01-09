@@ -17,6 +17,14 @@ class ScrapedList
     return parsed_page
   end
 
+  def find_max_page(start_page, max_pages, big_max)
+    @last_page = big_max/15
+    if max_pages < @last_page
+      max = max_pages
+    else
+      max = @last_page
+    end
+  end
 
   def get_basic_list(start_page, max_pages)
     page = parsed_page(0)
@@ -24,17 +32,17 @@ class ScrapedList
   	contact_url_list = Array.new
 
   	big_max = page.css('h1.main-title').children.first.text.gsub(",","").to_i
-    if max_pages < big_max
-      max = max_pages
-    else
-      max = big_max
-    end
-  	start = 0
+
+  	start = 0 # should be start_page?
+    max = find_max_page(start_page, max_pages, big_max)
+    puts "running to #{max}"
   	input_record = start_page
+
   	while start <= max do
 
   		page = parsed_page(input_record)
   		contact = page.css('div.name-info')
+
   		contact.each do |c|
         @url = c.css('a.pro-title').first.attributes['href'].value
         if @url.include?('javascript')

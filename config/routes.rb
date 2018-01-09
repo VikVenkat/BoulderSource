@@ -5,5 +5,7 @@ Rails.application.routes.draw do
 
   get 'builders/index'
 
+  get '/scrape', to:'lists#scrape_next_list'
+
 root to: 'builders#index'
 end

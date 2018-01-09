@@ -61,6 +61,22 @@ class ListsController < ApplicationController
     end
   end
 
+  def scrape_next_list
+    @list = List.new
+    @list.set_builder_info
+    @list.save
+
+    respond_to do |format|
+      if @list.save
+        format.html { redirect_to @list, notice: 'List was successfully created.' }
+        format.json { render :show, status: :created, location: @list }
+      else
+        format.html { render :new }
+        format.json { render json: @list.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_list

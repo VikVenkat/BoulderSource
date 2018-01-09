@@ -12,8 +12,8 @@ class ScrapedItem
     @company = @builder[:company]
     @counter = 0
     # puts "- - - - - - - - - - - - - "
-    print "Started: #{@company.to_s[0,15]}... @ #{@url}"
-
+    print "Start: #{@company.to_s[0,15]}... @ #{@url}"
+    @page = page_to_parse
     #exURL = "https://www.houzz.com/pro/morningstarbuilders/morning-star-builders-ltd"
   end
 
@@ -26,8 +26,8 @@ class ScrapedItem
   end
 
   def company_notes
-    company_info = page_to_parse.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
-    company_info_2 = page_to_parse.css('div.profile-about-right')
+    company_info = @page.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
+    company_info_2 = @page.css('div.profile-about-right')
 
     notes_string = String.new
     notes = Hash.new
@@ -84,7 +84,7 @@ class ScrapedItem
   end
 
   def contact_notes
-    contact_info = page_to_parse.css('div.pro-contact-methods')
+    contact_info = @page.css('div.pro-contact-methods')
     notes_string = String.new
     notes = Hash.new
 
@@ -150,7 +150,7 @@ class ScrapedItem
     a[:typical] ||= b.at(0)[:typical]
     a[:license] ||= b.at(0)[:license]
     a.save
-    puts " ==> Saved: #{a[:company].to_s[0,10]}..."
+    puts " ==> Save: #{a[:company].to_s[0,10]}..."
     return a
   end
 end
