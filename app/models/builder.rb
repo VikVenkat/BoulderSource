@@ -26,7 +26,8 @@ class Builder < ActiveRecord::Base
           @counter += 1
       end #do 2
     end #do 1
-    return @counter
+    puts "============================"
+    puts "Cleaned up #{@counter} duplicates"
   end
 
 

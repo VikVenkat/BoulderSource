@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180106235503) do
+ActiveRecord::Schema.define(version: 20180109210307) do
 
   create_table "builders", force: :cascade do |t|
     t.string "company"
@@ -34,6 +34,9 @@ ActiveRecord::Schema.define(version: 20180106235503) do
     t.datetime "updated_at", null: false
     t.float "length"
     t.text "content"
+    t.integer "start_page"
+    t.integer "no_pages"
+    t.integer "fail_count"
   end
 
 end

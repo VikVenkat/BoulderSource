@@ -3,13 +3,15 @@ class List < ApplicationRecord
   require 'scraped_item'
 
   #after_create :set_builder_info
-    def builder_list
-      a = ScrapedList.new.get_basic_list(6315,1000) #Confirm if this finished, 2055 start
+    def builder_list(options = {})
+      a = ScrapedList.new.get_basic_list(:start_page => 0, :no_pages => 1)
+      # try for
+      #a = ScrapedList.new.get_basic_list(options = {})
     end
 
 
-    def set_builder_info
-      a = builder_list
+    def set_builder_info(options = {})
+      a, b = builder_list(options = {}) #start_page, no_pages, url
       @fail_count = 0
 
       a.each do |b|
@@ -30,8 +32,9 @@ class List < ApplicationRecord
       puts "Success! Builder info set for #{a.size} records"
       puts "==============================================="
 
-      # self.update_attributes(:source => "Houzz + #{@list[:id].to_s}")
-      # self.update_attributes(:length => @list.length.to_s)
+      self.update_attributes(:source => b)
+      self.update_attributes(:length => a.size)
+      self.update_attributes(:fail_count => @fail_count)
       # self.update_attributes(:content => @list.to_s)
     end
 
