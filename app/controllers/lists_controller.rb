@@ -63,7 +63,7 @@ class ListsController < ApplicationController
 
   def scrape_next_list
     @list = List.new
-    @list.set_builder_info
+    @list.set_builder_info(scrape_params[:start_page], scrape_params[:no_pages])
     @list.save
 
     respond_to do |format|
@@ -86,5 +86,9 @@ class ListsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def list_params
       params.require(:list).permit(:source)
+    end
+
+    def scrape_params
+      params.permit(:start_page, :no_pages, :url)
     end
 end

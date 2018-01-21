@@ -19,7 +19,7 @@ class ScrapedList
 
   def get_parsed_page(input, url = nil)
     exURL = get_url(input, url)
-    binding.pry
+    # binding.pry
     unparsed_page = HTTParty.get(exURL)
     parsed_page = Nokogiri::HTML(unparsed_page)
     print "Loaded records page #{input} // "
@@ -40,15 +40,16 @@ class ScrapedList
 
     page = get_parsed_page(options[:start_page])#, options[:no_pages])
     @pagination_increment = 15
+    @start_page = options[:start_page].to_i
 
   	contact_url_list = Array.new
 
   	big_max = page.css('h1.main-title').children.first.text.gsub(",","").to_i
-
+    # binding.pry
   	start = 0 # should be start_page?
-    max = find_max_page(options[:start_page], options[:no_pages], big_max)
+    max = find_max_page(@start_page, options[:no_pages].to_i, big_max)
     puts "running to #{max}"
-  	input_record = options[:start_page]
+  	input_record = @start_page
 
   	while start <= max do
 
