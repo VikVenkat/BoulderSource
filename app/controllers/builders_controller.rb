@@ -5,6 +5,12 @@ class BuildersController < ApplicationController
   # GET /builders.json
   def index
     @builders = Builder.all
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data @builders.to_csv, filename: "builders-#{Date.today}.csv" }
+    end
+
   end
 
   # GET /builders/1
