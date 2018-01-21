@@ -1,24 +1,7 @@
-# README
+Builder Scraping Tool
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This is a small application to try ti find and play with builder data.
 
-Things you may want to cover:
+Most easily run in command line with app.get '/scrape' Can pass in parameters for start_page and no_pages: app.get '/scrape?start_page=15&no_pages=3'
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Can download full CSV by pointing your browser then at {localhost}/builders.csv
