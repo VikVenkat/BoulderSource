@@ -1,4 +1,3 @@
-
 class ScrapedItem
   require 'uri'
   require 'nokogiri'

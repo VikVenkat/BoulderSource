@@ -82,4 +82,21 @@ class Builder < ActiveRecord::Base
 
   end
 
+  def self.fill_emails(limit = 50)
+    # do this y = FindEmail.new.get_email(Builder.first[:first_name].to_s,Builder.first[:last_name].to_s, Builder.first[:site].to_s)
+    @counter = 0
+    ::Builder.all.each do |loc|
+      if loc.first_name.blank?
+        if (loc.site.blank? || loc.site.value.include?("Missing")
+          next
+        else
+          @first = loc.first_name.to_s
+          @last = loc.last_name.to_s
+          @site = loc.site.to_s
+
+          y = FindEmail.new.get_email(@first, @last, @site)
+
+
+  end
+
 end

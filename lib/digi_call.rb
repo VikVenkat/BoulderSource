@@ -1,4 +1,4 @@
-class DMP_call
+class DigiCall
 
 def get_sik
   exURL = URI.encode("http://parcelstream.com/admin/getsik.aspx?login=Adobe&account=ProspectSandbox")
