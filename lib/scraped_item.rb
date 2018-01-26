@@ -115,7 +115,6 @@ class ScrapedItem
     return notes
   end
 
-
   def get_builder_info
   	contact_array = Array.new
 		contact_data = {
