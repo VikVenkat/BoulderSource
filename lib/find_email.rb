@@ -1,6 +1,6 @@
 class FindEmail
   require 'net/http'
-  require 'URI'
+  # require 'URI'
   require 'json'
 
   # don't lose this awesome tool
@@ -28,12 +28,26 @@ class FindEmail
   end
 
   def get_email(first, last, domain)
-    # puts 'hello world'
-    e = post_request(first,last,domain)
-    hash = JSON.parse(e.body)
-    confidence_level = hash.dig('message', 'confidence').to_i
-    email = hash.dig('message', 'email')
-    puts "Found #{email} at #{confidence_level}% CL"
+    # @fail_count = 0
+    begin
+      x = post_request(first,last,domain)
+      hash = JSON.parse(x.body)
+      # binding.pry
+      confidence_level = hash.dig('message', 'confidence').to_i
+      email = hash.dig('message', 'email')
+    rescue Net::ReadTimeout => e
+      puts " // #{e.message} ==> Failed: #{first} @ #{domain}"
+    rescue TypeError => e
+      puts " // #{e.message} ==> Failed: #{first} @ #{domain}"
+    end
+
+
+    if email.blank?
+      # puts "Failed to get #{first} @ #{domain}"
+    else
+      puts "Found #{email} at #{confidence_level}% CL"
+    end
+
     return email
 
   end

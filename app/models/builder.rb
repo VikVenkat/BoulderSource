@@ -85,17 +85,27 @@ class Builder < ActiveRecord::Base
   def self.fill_emails(limit = 50)
     # do this y = FindEmail.new.get_email(Builder.first[:first_name].to_s,Builder.first[:last_name].to_s, Builder.first[:site].to_s)
     @counter = 0
+    @skip_count = 0
+
+
     ::Builder.all.each do |loc|
-      if loc.first_name.blank?
-        if (loc.site.blank? || loc.site.value.include?("Missing")
-          next
+      if loc.email.nil?
+        if loc.first_name.blank? || loc.site.blank? || loc.site.include?("Missing")
+          @skip_count += 1
         else
           @first = loc.first_name.to_s
           @last = loc.last_name.to_s
           @site = loc.site.to_s
 
-          y = FindEmail.new.get_email(@first, @last, @site)
-
+          @email = FindEmail.new.get_email(@first, @last, @site)
+          loc.update_attributes(:email => @email.to_s)
+          @counter += 1
+        end
+      end
+      puts "#{@counter} out of #{limit}, skipped #{loc.company} has #{loc.email}"
+      break if @counter >= limit
+    end
+    puts "Updated #{@counter} emails, skipped #{@skip_count}"
 
   end
 
