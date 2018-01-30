@@ -89,7 +89,7 @@ class Builder < ActiveRecord::Base
 
 
     ::Builder.all.each do |loc|
-      if loc.email.nil?
+      if loc.email.nil? || loc.email.include?("[") || loc.email.include?("60")
         if loc.first_name.blank? || loc.site.blank? || loc.site.include?("Missing")
           @skip_count += 1
         else
@@ -97,12 +97,13 @@ class Builder < ActiveRecord::Base
           @last = loc.last_name.to_s
           @site = loc.site.to_s
 
-          @email = FindEmail.new.get_email(@first, @last, @site)
+          @email = FindEmail.new.test_email_variants(@first, @last, @site)
+
           loc.update_attributes(:email => @email.to_s)
           @counter += 1
         end
       end
-      puts "#{@counter} out of #{limit}, skipped #{loc.company} has #{loc.email}"
+      puts "#{@counter} out of #{limit}, #{loc.company} has #{loc.email}"
       break if @counter >= limit
     end
     puts "Updated #{@counter} emails, skipped #{@skip_count}"

@@ -64,6 +64,9 @@ GEM
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
     crass (1.0.3)
+    dnsruby (1.60.2)
+    email_verifier (0.1.0)
+      dnsruby (>= 1.5)
     erubi (1.7.0)
     execjs (2.7.0)
     ffi (1.9.18)
@@ -189,6 +192,7 @@ DEPENDENCIES
   byebug
   capybara (~> 2.13)
   coffee-rails (~> 4.2)
+  email_verifier
   httparty
   jbuilder (~> 2.5)
   json
