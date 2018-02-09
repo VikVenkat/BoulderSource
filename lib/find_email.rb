@@ -28,11 +28,11 @@ class FindEmail
     variants[12] = "#{@ln}.#{@fn_fi}"
     variants[13] = "#{@ln}#{@fn}"
     variants[14] = "#{@fn_fi}#{@ln[0..6]}"
-    variants[15] = "info"
-    variants[16] = "admin"
-    variants[17] = "team"
-    variants[18] = "support"
-    variants[19] = "help"
+    variants[15] = "admin"
+    variants[16] = "team"
+    variants[17] = "support"
+    variants[18] = "help"
+    variants[19] = "info"
 
     return variants
   end
@@ -46,18 +46,34 @@ class FindEmail
         @success = EmailVerifier.check(@email)
 
         if @success == true
+          puts "Found valid email #{@email}"
           return @email
         end
       # in the futute, note this captures only the first email, come back later and get them all
       end
     rescue EmailVerifier::FailureException => e
-      puts " // #{e.message} ==> Failed: #{@email}"
+      puts " // #{e.message} Intentional timeout 1 min ==> Failed: #{@email}"
       sleep(60)
       return
     rescue EmailVerifier::OutOfMailServersException => e
       puts " // #{e.message} ==> Failed: #{@email}"
       return
     rescue EmailVerifier::NoMailServerException => e
+      puts " // #{e.message} ==> Failed: #{@email}"
+      return "No server at domain"
+    rescue Net::SMTPServerBusy => e
+      puts " // #{e.message} ==> Failed: #{@email}"
+      return
+    rescue Dnsruby::ResolvTimeout => e
+      puts " // #{e.message} ==> Failed: #{@email}"
+      return
+    rescue Errno::ECONNRESET => e
+      puts " // #{e.message} ==> Failed: #{@email}"
+      return
+    rescue Net::SMTPFatalError => e
+      puts " // #{e.message} ==> Failed: #{@email}"
+      return "spamfilter at domain"
+    rescue EOFError => e
       puts " // #{e.message} ==> Failed: #{@email}"
       return
     end

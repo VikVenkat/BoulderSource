@@ -82,31 +82,33 @@ class Builder < ActiveRecord::Base
 
   end
 
-  def self.fill_emails(limit = 50)
+  def self.fill_emails(limit = 50, start_index = 0)
     # do this y = FindEmail.new.get_email(Builder.first[:first_name].to_s,Builder.first[:last_name].to_s, Builder.first[:site].to_s)
     @counter = 0
     @skip_count = 0
 
 
-    ::Builder.all.each do |loc|
-      if loc.email.nil? || loc.email.include?("[") || loc.email.include?("60")
-        if loc.first_name.blank? || loc.site.blank? || loc.site.include?("Missing")
+    ::Builder.all.drop(start_index).each do |loc|
+      if loc.email.nil? || loc.email.include?("[") || loc.email.include?("60") || loc.email.blank? || loc.email.include?("null")
+        if loc.first_name.blank? || loc.site.blank? || loc.site.include?("Missing") || loc.first_name.nil? || loc.site.include?("houzz")
           @skip_count += 1
         else
           @first = loc.first_name.to_s
           @last = loc.last_name.to_s
           @site = loc.site.to_s
-
+          puts "Attempting #{@counter} out of #{limit}, #{loc.company} // #{loc.email}"
           @email = FindEmail.new.test_email_variants(@first, @last, @site)
 
           loc.update_attributes(:email => @email.to_s)
           @counter += 1
+
         end
       end
-      puts "#{@counter} out of #{limit}, #{loc.company} has #{loc.email}"
+
       break if @counter >= limit
     end
     puts "Updated #{@counter} emails, skipped #{@skip_count}"
+    puts "In total, #{::Builder.where.not(email: nil).count} emails in the DB."
 
   end
 
