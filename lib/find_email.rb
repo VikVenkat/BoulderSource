@@ -28,11 +28,15 @@ class FindEmail
     variants[12] = "#{@ln}.#{@fn_fi}"
     variants[13] = "#{@ln}#{@fn}"
     variants[14] = "#{@fn_fi}#{@ln[0..6]}"
-    variants[15] = "admin"
-    variants[16] = "team"
-    variants[17] = "support"
-    variants[18] = "help"
-    variants[19] = "info"
+    variants[15] = "#{@fn[0..2]}"
+    variants[16] = "#{@fn[0..3]}"
+    variants[17] = "#{@fn[0..4]}"
+    variants[18] = "#{@fn[0..5]}"
+    variants[19] = "admin"
+    variants[20] = "team"
+    variants[21] = "support"
+    variants[22] = "help"
+    variants[23] = "info"
 
     return variants
   end
@@ -48,6 +52,10 @@ class FindEmail
         if @success == true
           puts "Found valid email #{@email}"
           return @email
+
+        else
+          puts "Good domain, but not one of the LPs tried."
+          return "Incomplete variants"
         end
       # in the futute, note this captures only the first email, come back later and get them all
       end
