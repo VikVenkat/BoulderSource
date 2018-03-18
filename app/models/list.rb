@@ -10,7 +10,7 @@ class List < ApplicationRecord
     end
 
 
-    def set_builder_info(start_page, no_pages, state)
+    def set_builder_info(start_page, no_pages, state = nil)
       a, b = builder_list(start_page, no_pages, state) #start_page, no_pages, url
       @fail_count = 0
       # binding.pry
