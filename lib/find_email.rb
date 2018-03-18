@@ -13,12 +13,13 @@ class FindEmail
     @ln = last
     @ln_fi = last.to_s[0]
 
-    variants[0] = "#{@fn}" #michelle@example.com
-    variants[1] = "#{@fn_fi}#{@ln}" #mlagrande@example.com
-    variants[2] = "#{@fn_fi}.#{@ln}" #b.smith@domain.com
+
+    variants[0] = "#{@fn_fi}#{@ln}" #mlagrande@example.com
+    variants[1] = "#{@fn_fi}.#{@ln}" #b.smith@domain.com
+    variants[2] = "#{@fn}.#{@ln}" #michelle.lagrande@example.com
     variants[3] = "#{@fn}.#{@ln_fi}" #bob.s@domain.com
     variants[4] = "#{@fn_fi}#{@ln_fi}" #bs@domain.com
-    variants[5] = "#{@fn}.#{@ln}" #michelle.lagrande@example.com
+    variants[5] = "#{@fn}" #michelle@example.com
     variants[6] = "#{@fn}#{@ln}" #michellelagrande@example.com
     variants[7] = "#{@ln}" #lagrande@example.com
     variants[8] = "#{@fn}_#{@ln}" #michelle_lagrande@example.com

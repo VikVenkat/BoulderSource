@@ -3,15 +3,15 @@ class List < ApplicationRecord
   require 'scraped_item'
 
   #after_create :set_builder_info
-    def builder_list(start_page = 0, no_pages = 0)
-      a = ScrapedList.new.get_basic_list(:start_page => start_page, :no_pages => no_pages)
+    def builder_list(start_page = 0, no_pages = 0, state = nil)
+      a = ScrapedList.new.get_basic_list(:start_page => start_page, :no_pages => no_pages, :state => state)
       # binding.pry
 
     end
 
 
-    def set_builder_info(start_page, no_pages)
-      a, b = builder_list(start_page, no_pages) #start_page, no_pages, url
+    def set_builder_info(start_page, no_pages, state)
+      a, b = builder_list(start_page, no_pages, state) #start_page, no_pages, url
       @fail_count = 0
       # binding.pry
       a.each do |b|
@@ -22,9 +22,10 @@ class List < ApplicationRecord
           @fail_count += 1
         rescue => e
           puts " // #{e.message} ==> Failed: #{b[:company].to_s[0,15]}..."
+          binding.pry
           @fail_count += 1
         end
-          #binding.pry
+
       end
       puts " "
       puts "Failed to save #{@fail_count} records"

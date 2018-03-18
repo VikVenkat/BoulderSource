@@ -8,17 +8,25 @@ class ScrapedList
 #  def initialize(list)
 #    @list = list
 #  end
-  def get_url(start_page, url= nil)
-    default_url = "https://www.houzz.com/professionals/home-builders/p/"
-    # usaUrl = "https://www.houzz.com/professionals/home-builders/p/#{input}"
+  def get_url(start_page, state = nil, url= nil)
+
+    if state.nil? == false
+      default_url = "https://www.houzz.com/professionals/home-builders/c/#{state}/p/"
+    else
+      default_url = "https://www.houzz.com/professionals/home-builders/p/"
+    end
+
     url ||= default_url
     input = start_page
     exURL = URI.encode("#{url}#{input}")
+    puts "#{exURL}"
+
+    return exURL
 
   end
 
-  def get_parsed_page(input, url = nil)
-    exURL = get_url(input, url)
+  def get_parsed_page(input, state = nil, url = nil)
+    exURL = get_url(input, state, url)
     # binding.pry
     unparsed_page = HTTParty.get(exURL)
     parsed_page = Nokogiri::HTML(unparsed_page)
@@ -38,7 +46,7 @@ class ScrapedList
 
   def get_basic_list(options = {})
 
-    page = get_parsed_page(options[:start_page])#, options[:no_pages])
+    page = get_parsed_page(options[:start_page], options[:state])#, options[:no_pages])
     @pagination_increment = 15
     @start_page = options[:start_page].to_i
 
@@ -53,7 +61,7 @@ class ScrapedList
 
   	while start <= max do
 
-  		page = get_parsed_page(input_record)#, options[:no_pages])
+  		page = get_parsed_page(input_record, options[:state])#, options[:no_pages])
   		contact = page.css('div.name-info')
 
   		contact.each do |c|

@@ -114,6 +114,37 @@ class ScrapedItem
     return notes
   end
 
+  def address
+    company_info = @page.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
+    company_info_2 = @page.css('div.profile-about-right')
+
+    notes_string = String.new
+    notes = Hash.new
+
+    company_info.css('div.info-list-text').each do |a|
+      if a.css("span[itemprop=streetAddress]").present?
+        notes[:street] = a.css("span[itemprop=streetAddress]").text
+      end
+      if a.css("span[itemprop=addressLocality]").present?
+        notes[:city] = a.css("span[itemprop=addressLocality]").text
+      end
+      if a.css("span[itemprop=addressRegion]").present?
+        notes[:state] = a.css("span[itemprop=addressRegion]").text
+      end
+      if a.css("span[itemprop=postalCode]").present?
+        notes[:zip] = a.css("span[itemprop=postalCode]").text
+      end
+    end
+
+    if notes.empty?
+      puts company_info
+    end
+
+    return notes
+
+
+  end
+
   def get_builder_info
   	contact_array = Array.new
 		contact_data = {
@@ -125,7 +156,11 @@ class ScrapedItem
       contact_name: company_notes[:contact_name],
       location: company_notes[:location],
       typical: company_notes[:typical],
-      license: company_notes[:license]
+      license: company_notes[:license],
+      street: address[:street],
+      city: address[:city],
+      state: address[:state],
+      zip: address[:zip]
 #       notes: company_notes,
 #       email:
 
@@ -135,6 +170,23 @@ class ScrapedItem
     return contact_array
   end #def
 
+######### WIP #########
+  def split_names
+    hash = NameSplitter.new.split(company_notes[:contact_name])
+  end
+  def get_email
+    loc = get_builder_info
+    if split_names[:first_name].blank? || contact_notes[:site].blank? || contact_notes[:site].include?("Missing") || split_names[:first_name].nil? || contact_notes[:site].include?("houzz")
+      return
+    else
+      @first = split_names[:first_name].to_s
+      @last = split_names[:last_name].to_s
+      @site = contact_notes[:site]
+
+      @email = FindEmail.new.test_email_variants(@first, @last, @site)
+    end
+  end
+#########################
   def create_builder
     a = Builder.new
     b = get_builder_info
@@ -147,6 +199,17 @@ class ScrapedItem
     a[:location] ||= b.at(0)[:location]
     a[:typical] ||= b.at(0)[:typical]
     a[:license] ||= b.at(0)[:license]
+    a[:street] ||= b.at(0)[:street]
+    a[:city] ||= b.at(0)[:city]
+    a[:state] ||= b.at(0)[:state]
+    a[:zip] ||= b.at(0)[:zip]
+    begin
+      a[:first_name] ||= split_names[:first_name].to_s
+      a[:last_name] ||= split_names[:last_name].to_s
+    rescue => e
+      puts " // Name missing for #{b.at(0)[:company].to_s}"
+    end
+    # a[:email] ||= get_email.to_s #slows the thing WAY down.
     a.save
     puts " ==> Save: #{a[:company].to_s[0,10]}..."
     return a
