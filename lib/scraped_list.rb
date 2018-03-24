@@ -65,16 +65,18 @@ class ScrapedList
   		contact = page.css('div.name-info')
 
   		contact.each do |c|
-        @url = c.css('a.pro-title').first.attributes['href'].value
-        if @url.include?('javascript')
-          next
-        else
-  				contact_data = {
-  					company: c.css('a.pro-title').text,
-  					url: @url,
-  				}
-  				contact_url_list << contact_data
-
+        begin
+          @url = c.css('a.pro-title').first.attributes['href'].value
+          if @url.include?('javascript')
+            next
+          else
+    				contact_data = {
+    					company: c.css('a.pro-title').text,
+    					url: @url,
+    				}
+    				contact_url_list << contact_data
+          end
+        rescue => e
         end
   		end
       puts "Scraped List for #{contact_url_list.size} peeps"

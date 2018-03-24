@@ -13,7 +13,6 @@ class List < ApplicationRecord
     def set_builder_info(start_page, no_pages, state = nil)
       a, b = builder_list(start_page, no_pages, state) #start_page, no_pages, url
       @fail_count = 0
-      # binding.pry
       a.each do |b|
         begin
           x = ScrapedItem.new(b).create_builder
@@ -22,7 +21,6 @@ class List < ApplicationRecord
           @fail_count += 1
         rescue => e
           puts " // #{e.message} ==> Failed: #{b[:company].to_s[0,15]}..."
-          binding.pry
           @fail_count += 1
         end
 
@@ -36,6 +34,7 @@ class List < ApplicationRecord
       self.update_attributes(:source => b)
       self.update_attributes(:length => a.size)
       self.update_attributes(:fail_count => @fail_count)
+      ::Builder.dedupe
       # self.update_attributes(:content => @list.to_s)
     end
 

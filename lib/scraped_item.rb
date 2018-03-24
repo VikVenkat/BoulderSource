@@ -26,7 +26,7 @@ class ScrapedItem
 
   def company_notes
     company_info = @page.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
-    company_info_2 = @page.css('div.profile-about-right')
+    company_info_2 = @page.css('div.profile-about-right').css('profile-content-narrow')
 
     notes_string = String.new
     notes = Hash.new
@@ -116,7 +116,7 @@ class ScrapedItem
 
   def address
     company_info = @page.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
-    company_info_2 = @page.css('div.profile-about-right')
+    company_info_2 = @page.css('div.profile-about-right').css('profile-content-narrow')
 
     notes_string = String.new
     notes = Hash.new
@@ -136,8 +136,24 @@ class ScrapedItem
       end
     end
 
+    company_info_2.css('div.info-list-text').each do |a|
+      if a.css("span[itemprop=streetAddress]").present?
+        notes[:street] ||= a.css("span[itemprop=streetAddress]").text
+      end
+      if a.css("span[itemprop=addressLocality]").present?
+        notes[:city] ||= a.css("span[itemprop=addressLocality]").text
+      end
+      if a.css("span[itemprop=addressRegion]").present?
+        notes[:state] ||= a.css("span[itemprop=addressRegion]").text
+      end
+      if a.css("span[itemprop=postalCode]").present?
+        notes[:zip] ||= a.css("span[itemprop=postalCode]").text
+      end
+    end
+
     if notes.empty?
       puts company_info
+      binding.pry
     end
 
     return notes
@@ -147,20 +163,23 @@ class ScrapedItem
 
   def get_builder_info
   	contact_array = Array.new
+    @contact_notes = contact_notes.dup
+    @company_notes = company_notes.dup
+    @address = address.dup
 		contact_data = {
       company: @company,
-      phone: contact_notes[:phone],
-      site: contact_notes[:site],
+      phone: @contact_notes[:phone],
+      site: @contact_notes[:site],
       url: @url,
-      builder_type: company_notes[:builder_type],
-      contact_name: company_notes[:contact_name],
-      location: company_notes[:location],
-      typical: company_notes[:typical],
-      license: company_notes[:license],
-      street: address[:street],
-      city: address[:city],
-      state: address[:state],
-      zip: address[:zip]
+      builder_type: @company_notes[:builder_type],
+      contact_name: @company_notes[:contact_name],
+      location: @company_notes[:location],
+      typical: @company_notes[:typical],
+      license: @company_notes[:license],
+      street: @address[:street],
+      city: @address[:city],
+      state: @address[:state],
+      zip: @address[:zip]
 #       notes: company_notes,
 #       email:
 
@@ -170,7 +189,7 @@ class ScrapedItem
     return contact_array
   end #def
 
-######### WIP #########
+
   def split_names
     hash = NameSplitter.new.split(company_notes[:contact_name])
   end
@@ -186,10 +205,10 @@ class ScrapedItem
       @email = FindEmail.new.test_email_variants(@first, @last, @site)
     end
   end
-#########################
+
   def create_builder
     a = Builder.new
-    b = get_builder_info
+    b = get_builder_info.dup
     a[:company] ||= b.at(0)[:company].to_s
     a[:phone] ||= b.at(0)[:phone].to_s
     a[:site] ||= b.at(0)[:site].to_s

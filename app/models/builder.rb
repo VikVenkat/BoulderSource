@@ -9,7 +9,7 @@ class Builder < ActiveRecord::Base
       ::Builder.where('url == ? AND id > ?', loc.url, loc.id).each do |comp| #2
           # Merge or fill blanks here
           puts "Deleted Builder ID #{loc.id}" #delete the first, assuming the later is more complete
-          comp.destroy
+          loc.destroy
           @counter += 1
       end #do 2
     end #do 1
