@@ -26,11 +26,10 @@ class ScrapedItem
 
   def company_notes
     company_info = @page.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
-    company_info_2 = @page.css('div.profile-about-right').css('profile-content-narrow')
+    company_info_2 = @page.css('div.profile-content-narrow')
 
     notes_string = String.new
     notes = Hash.new
-
 
     company_info.css('div.info-list-text').each do |a|
       if a.text.include?('Contact:')
@@ -54,31 +53,35 @@ class ScrapedItem
       else
         notes[:builder_type] = company_info.css("span[itemprop = 'title']").text
       end
-
-      company_info_2.css("div.info-list-label").each do |a|
-        if a.css('i.hzi-Man-Outline').present?
-          notes[:contact_name] ||= a.text.gsub('Contact: ','')
-        end
-
-        if a.css('i.hzi-Location').present?
-          notes[:location] ||= a.text.gsub('Location: ','')
-        end
-
-        if a.css('i.hzi-Cost-Estimate').present?
-          notes[:typical] ||= a.text.gsub('Typical Job Costs: ','')
-        end
-
-        if a.css('i.hzi-Ruler').present?
-          notes[:builder_type] ||= a.text.gsub('Professionals','').squish
-        end
-
-        if a.css('i.hzi-License').present?
-          notes[:license] ||= a.text.gsub('License Number:','')
-        end
-      end
-#      notes_string << a.text.squish
-#      notes_string << ", "
     end
+
+    company_info_2.css('div.info-list-label').each do |a|
+
+      if a.css('i.hzi-Man-Outline').present?
+        notes[:contact_name] ||= a.text.gsub('Contact: ','')
+      end
+
+      if a.css('i.hzi-Location').present?
+        notes[:location] ||= a.text.gsub('Location: ','')
+      end
+
+      if a.css('i.hzi-Cost-Estimate').present?
+        notes[:typical] ||= a.text.gsub('Typical Job Costs: ','')
+      end
+
+      if a.css('i.hzi-Ruler').present?
+        notes[:builder_type] ||= a.text.gsub('Professionals','').squish
+      end
+
+      if a.css('i.hzi-License').present?
+        notes[:license] ||= a.text.gsub('License Number:','')
+      end
+    end
+
+    if notes.empty?
+      binding.pry
+    end
+
     return notes
   end
 
@@ -116,7 +119,7 @@ class ScrapedItem
 
   def address
     company_info = @page.css('div.profile-about-right').css('div.info-list-label').css('div.info-list-text')
-    company_info_2 = @page.css('div.profile-about-right').css('profile-content-narrow')
+    company_info_2 = @page.css('div.profile-about-right').css('div.profile-content-narrow')
 
     notes_string = String.new
     notes = Hash.new
@@ -227,6 +230,7 @@ class ScrapedItem
       a[:last_name] ||= split_names[:last_name].to_s
     rescue => e
       puts " // Name missing for #{b.at(0)[:company].to_s}"
+      binding.pry
     end
     # a[:email] ||= get_email.to_s #slows the thing WAY down.
     a.save
