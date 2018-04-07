@@ -153,7 +153,7 @@ class ScrapedItem
 
     if notes.empty?
       puts company_info
-      binding.pry
+      # binding.pry
     end
 
     return notes
