@@ -27,8 +27,7 @@ class ScrapedList
 
   def get_parsed_page(input, state = nil, url = nil)
     exURL = get_url(input, state, url)
-    # binding.pry
-    unparsed_page = HTTParty.get(exURL)
+    unparsed_page = HTTParty.get(exURL,{headers: {"User-Agent" => "Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_1_2 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7D11 Safari/528.16"}})
     parsed_page = Nokogiri::HTML(unparsed_page)
     print "Loaded records page #{input} // "
     return parsed_page
