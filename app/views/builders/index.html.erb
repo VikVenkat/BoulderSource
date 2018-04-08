@@ -2,6 +2,13 @@
 
 <h1>Builders</h1>
 
+<div>
+<h1> Import Data </h1>
+  <%= form_tag import_users_path, multipart: true do %>
+    <%= file_field_tag :file %>
+    <%= submit_tag "Import CSV" %>
+    <% end %>
+</div>
 
 <table>
   <% builder= @builders.first %>

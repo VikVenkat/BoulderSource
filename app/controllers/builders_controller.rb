@@ -43,6 +43,11 @@ class BuildersController < ApplicationController
     end
   end
 
+  def import
+    Builder.import(params[:file])
+    redirect_to root_url, notice: "Data Imported Successfully"
+  end
+
   # PATCH/PUT /builders/1
   # PATCH/PUT /builders/1.json
   def update

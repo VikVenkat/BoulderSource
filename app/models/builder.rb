@@ -33,7 +33,12 @@ class Builder < ActiveRecord::Base
         csv << attributes.map{ |attr| item.send(attr) }
       end
     end
+  end
 
+  def self.import(file)
+    CSV.foreach(file.path, headers: true) do |row|
+      Builder.create! row.to_hash
+    end
   end
 
   def self.split_names
