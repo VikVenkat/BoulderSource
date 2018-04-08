@@ -2,14 +2,20 @@ class Builder < ActiveRecord::Base
 
   require 'scraped_list'
   require 'scraped_item'
+  require 'find_email'
 
   def self.dedupe
     @counter = 0
     ::Builder.all.each do |loc| #1
-      ::Builder.where('url == ? AND id > ?', loc.url, loc.id).each do |comp| #2
-          # Merge or fill blanks here
-          puts "Deleted Builder ID #{loc.id}" #delete the first, assuming the later is more complete
-          loc.destroy
+      ::Builder.where('url = ? AND id > ?', loc.url, loc.id).each do |comp| #2
+          c1 = loc.attributes
+          c2 = comp.attributes
+          c1.map{ |k,v| v == nil ? c1.delete(k) : '' }
+          c2.map{ |k,v| v == nil ? c2.delete(k) : '' }
+          c1.merge(c2)
+          loc.update(c1)
+          puts "Deleted Builder ID #{comp.id}" #delete the first, assuming the later is more complete
+          comp.destroy
           @counter += 1
       end #do 2
     end #do 1

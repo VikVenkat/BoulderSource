@@ -13,6 +13,7 @@ class List < ApplicationRecord
     def set_builder_info(start_page, no_pages, state = nil)
       a, b = builder_list(start_page, no_pages, state) #start_page, no_pages, url
       @fail_count = 0
+      @counter = 0
       a.each do |b|
         begin
           x = ScrapedItem.new(b).create_builder
@@ -23,8 +24,13 @@ class List < ApplicationRecord
           puts " // #{e.message} ==> Failed: #{b[:company].to_s[0,15]}..."
           @fail_count += 1
         end
-
+        @counter += 1
       end
+
+      if @counter % 100 == 0
+        puts @counter
+      end 
+
       puts " "
       puts "Failed to save #{@fail_count} records"
       puts "==============================================="

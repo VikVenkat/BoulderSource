@@ -79,7 +79,7 @@ class ScrapedItem
     end
 
     if notes.empty?
-      binding.pry
+      puts 'missing notes'
     end
 
     return notes
@@ -156,7 +156,7 @@ class ScrapedItem
 
     if notes.empty?
       puts company_info
-      # binding.pry
+
     end
 
     return notes
@@ -230,7 +230,7 @@ class ScrapedItem
       a[:last_name] ||= split_names[:last_name].to_s
     rescue => e
       puts " // Name missing for #{b.at(0)[:company].to_s}"
-      binding.pry
+
     end
     # a[:email] ||= get_email.to_s #slows the thing WAY down.
     a.save
