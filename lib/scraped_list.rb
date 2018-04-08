@@ -27,7 +27,7 @@ class ScrapedList
 
   def get_parsed_page(input, state = nil, url = nil)
     exURL = get_url(input, state, url)
-    unparsed_page = HTTParty.get(exURL,{headers: {"User-Agent" => "ruby"}})
+    unparsed_page = HTTParty.get(exURL,{headers: {"User-Agent" => "test"}})
     parsed_page = Nokogiri::HTML(unparsed_page)
     print "Loaded records page #{input} // "
     return parsed_page
