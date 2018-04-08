@@ -42,6 +42,13 @@ class ScrapedList
     end
   end
 
+  def get_big_max
+    begin
+      big_max = page.css('h1.main-title').children.first.text.gsub(",","").to_i
+    rescue => e
+      big_max = 15
+    end
+  end
 
   def get_basic_list(options = {})
 
@@ -51,10 +58,8 @@ class ScrapedList
 
   	contact_url_list = Array.new
 
-  	big_max = page.css('h1.main-title').children.first.text.gsub(",","").to_i
-    # binding.pry
   	start = 0 # should be start_page?
-    max = find_max_page(@start_page, options[:no_pages].to_i, big_max)
+    max = find_max_page(@start_page, options[:no_pages].to_i, get_big_max)
     puts "running to #{max}"
   	input_record = @start_page
 
