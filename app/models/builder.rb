@@ -37,7 +37,7 @@ class Builder < ActiveRecord::Base
 
   def self.import(file)
     CSV.foreach(file.path, headers: true) do |row|
-      Builder.create row.to_hash
+      ::Builder.create! row.to_hash
     end
   end
 
