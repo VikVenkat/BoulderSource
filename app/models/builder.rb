@@ -37,7 +37,8 @@ class Builder < ActiveRecord::Base
 
   def self.import(file)
     CSV.foreach(file.path, headers: true) do |row|
-      ::Builder.create! row.to_hash
+      r = row.encode("UTF-16be", :invalid=>:replace, :replace=>"?").encode('UTF-8')
+      ::Builder.create! r.to_hash
     end
   end
 
