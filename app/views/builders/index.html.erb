@@ -9,7 +9,7 @@
     <%= submit_tag "Import CSV" %>
     <% end %>
 </div>
-
+<%= will_paginate @builders %>
 <table>
   <% builder= @builders.first %>
     <% builder.attributes.each do |attr_name, attr_value| %>
@@ -43,7 +43,7 @@
     </tr>
   <% end %>
 </table>
-
+<%= will_paginate @builders %>
 <br>
 
 <%= link_to 'New Builder', new_builder_path %>

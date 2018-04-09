@@ -4,7 +4,7 @@ class BuildersController < ApplicationController
   # GET /builders
   # GET /builders.json
   def index
-    @builders = Builder.all
+    @builders = Builder.paginate(:page => params[:page], :per_page => 100) #Builder.all
 
     respond_to do |format|
       format.html
